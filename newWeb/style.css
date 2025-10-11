@@ -129,16 +129,81 @@ ul{padding-left:1.2rem}
 }
 
 /* Agents */
-.agents-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin:.6rem 0}
-@media (max-width:900px){.agents-grid{grid-template-columns:1fr}}
-.agent{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem}
-.agent h4{margin:.2rem 0 .4rem 0}
-.agent .row{align-items:center}
-.badge-mini{font-size:.75rem;border:1px solid var(--border);border-radius:999px;padding:.1rem .5rem;background:var(--surface-2);color:var(--muted)}
-.stat{font-weight:700}
+/* Agents – forbedret layout */
+.agents-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));  /* større kort */
+  gap:1rem;
+  margin:.8rem 0;
+}
+@media (max-width:1000px){ .agents-grid{grid-template-columns:1fr} }
+
+.agent{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:1rem;
+  box-shadow:var(--shadow);
+  min-height:132px;              /* mer “luft” */
+}
+
+.agent-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:.6rem;
+}
+.agent h4{
+  margin:0;
+  font-size:1.05rem;
+  letter-spacing:.2px;
+}
+
+.badge-mini{
+  font-size:.8rem;
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:.2rem .6rem;
+  background:var(--surface-2);
+  color:var(--muted);
+}
+
+.agent-metrics{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr)); /* Temp / Load / Power */
+  gap:.6rem;
+  align-items:end;
+}
+@media (max-width:700px){ .agent-metrics{grid-template-columns:1fr 1fr} }
+
+.metric{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:.55rem .7rem;
+}
+.metric .label{
+  font-size:.85rem;
+  color:var(--muted);
+  margin-bottom:.15rem;
+}
+.metric .value{
+  font-weight:800;
+  font-size:1.15rem;
+  line-height:1.1;
+}
+
 .stat.ok{color:var(--accent)}
 .stat.hot{color:#d94c4c}
 .stat.cold{color:#2563eb}
+
+.agent-neighbors{
+  margin-top:.6rem;
+  color:var(--muted);
+  font-size:.9rem;
+  border-top:1px dashed var(--border);
+  padding-top:.5rem;
+}
 
 /* Timeline */
 .timeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.6rem}
