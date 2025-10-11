@@ -81,22 +81,43 @@ for(let i=0;i<agents.length;i++){
 function agentById(id){ return agents.find(a=>a.id===id); }
 
 function renderAgents(){
-  const box = $('#agents'); box.innerHTML='';
+  const box = $('#agents');
+  box.innerHTML = '';
+
   agents.forEach(a=>{
-    const li = document.createElement('div');
-    li.className='agent';
-    const tempClass = a.temp>33?'hot':(a.temp<23?'cold':'ok');
-    li.innerHTML = `
-      <h4>${a.id} <span class="badge-mini">${a.status}</span></h4>
-      <div class="row between center">
-        <div>Temp: <span class="stat ${tempClass}">${fmt(a.temp)}°C</span></div>
-        <div>Load: <span class="stat">${fmt(a.load*100,0)}%</span></div>
-        <div>Power: <span class="stat">${fmt(a.power,2)} kW</span></div>
+    const wrapper = document.createElement('div');
+    wrapper.className = 'agent';
+
+    const tempClass = a.temp>33 ? 'hot' : (a.temp<23 ? 'cold' : 'ok');
+
+    wrapper.innerHTML = `
+      <div class="agent-header">
+        <h4>${a.id}</h4>
+        <span class="badge-mini">${a.status}</span>
       </div>
-      <div class="small muted">Naboer: ${a.neighbors.join(', ')}</div>`;
-    box.appendChild(li);
+
+      <div class="agent-metrics">
+        <div class="metric">
+          <div class="label">Temp</div>
+          <div class="value stat ${tempClass}">${fmt(a.temp)}°C</div>
+        </div>
+        <div class="metric">
+          <div class="label">Load</div>
+          <div class="value">${fmt(a.load*100,0)}%</div>
+        </div>
+        <div class="metric">
+          <div class="label">Power</div>
+          <div class="value">${fmt(a.power,2)} kW</div>
+        </div>
+      </div>
+
+      <div class="agent-neighbors">Naboer: ${a.neighbors.join(', ')}</div>
+    `;
+
+    box.appendChild(wrapper);
   });
 }
+
 
 function swarmStep(){
   // ambient variation + heat spikes
@@ -142,6 +163,77 @@ function swarmStep(){
   renderAgents();
 }
 
+/* ===== Diagram UI: vis/skip lag + zoom & pan ===== */
+(() => {
+  const gPower = document.getElementById('layer-power');
+  const gCool  = document.getElementById('layer-cooling');
+  const vp     = document.getElementById('viewport');
+  const svg    = document.querySelector('.diagram-wrap svg');
+
+  // Toggle lag
+  const chkP = document.getElementById('toggle-power');
+  const chkC = document.getElementById('toggle-cooling');
+  if(chkP){ chkP.addEventListener('change', ()=> {
+    gPower.classList.toggle('hidden', !chkP.checked);
+  }); }
+  if(chkC){ chkC.addEventListener('change', ()=> {
+    gCool.classList.toggle('hidden', !chkC.checked);
+  }); }
+
+  // Zoom/pan (enkelt, uten lib)
+  let scale = 1, minS=0.7, maxS=2.2;
+  let panX = 0, panY = 0;
+  let dragging = false, last = {x:0,y:0};
+
+  function applyTransform(){
+    vp.setAttribute('transform', `translate(${panX},${panY}) scale(${scale})`);
+  }
+
+  // Knapper
+  const zi = document.getElementById('zoom-in');
+  const zo = document.getElementById('zoom-out');
+  const zr = document.getElementById('zoom-reset');
+  if(zi) zi.addEventListener('click', ()=>{ scale = Math.min(maxS, scale*1.15); applyTransform(); });
+  if(zo) zo.addEventListener('click', ()=>{ scale = Math.max(minS, scale/1.15); applyTransform(); });
+  if(zr) zr.addEventListener('click', ()=>{ scale=1; panX=0; panY=0; applyTransform(); });
+
+  // Mouse pan
+  svg.addEventListener('mousedown', (e)=>{
+    // bare hvis du klikker i tomrommet, ikke på knapper
+    if(e.target.closest('.node')) return;
+    dragging = true; last = {x:e.clientX, y:e.clientY};
+  });
+  window.addEventListener('mousemove', (e)=>{
+    if(!dragging) return;
+    const dx = (e.clientX - last.x);
+    const dy = (e.clientY - last.y);
+    last = {x:e.clientX, y:e.clientY};
+    panX += dx; panY += dy;
+    applyTransform();
+  });
+  window.addEventListener('mouseup', ()=> dragging=false);
+
+  // Wheel-zoom (Ctrl + scroll for å unngå “søkk” ved vanlig scroll)
+  svg.addEventListener('wheel', (e)=>{
+    if(!e.ctrlKey) return; // hold Ctrl for å zoome
+    e.preventDefault();
+    const dir = e.deltaY>0 ? -1 : 1;
+    const old = scale;
+    scale = clamp(scale*(1+dir*0.12), minS, maxS);
+
+    // zoom mot cursor (litt hyggeligere UX)
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    const ctm = svg.getScreenCTM().inverse();
+    const p = pt.matrixTransform(ctm);
+
+    panX = p.x - (p.x - panX) * (scale/old);
+    panY = p.y - (p.y - panY) * (scale/old);
+    applyTransform();
+  }, {passive:false});
+})();
+
+
 // ---------- Events ----------
 function logEvent(msg){
   const ul = $('#event-log');
@@ -170,6 +262,8 @@ function step(){
 
   if(Math.random()<0.03) logEvent('Sverm balanse: last flyttet fra Z2-A → Z2-B.');
 }
+
+
 function start(){ if(loopId) return; loopId=setInterval(step,1000); state.running=true; renderKPIs(); renderAgents(); logEvent('Live-oppdatering startet.'); }
 function stop(){ if(loopId){clearInterval(loopId); loopId=null; state.running=false; logEvent('Live-oppdatering stoppet.');} }
 function reset(){ stop(); state.tick=0; state.history.length=0; state.data={energyMW:22,lossPct:3.6,uptime:99.96,renMix:32}; agents.forEach(a=>{a.temp=rnd(25,28);a.load=rnd(0.35,0.65);a.power=rnd(2.5,4.5);a.status='OK';}); renderKPIs(); renderAgents(); $('#ai-findings').innerHTML=''; logEvent('Nullstilt.'); }

@@ -124,86 +124,34 @@ ul{padding-left:1.2rem}
 .matrix{display:grid;grid-template-columns:1fr;gap:.5rem;margin-top:.5rem}
 .m-row{display:grid;grid-template-columns:1.1fr 1.2fr 1.7fr;gap:.6rem;padding:.6rem;border:1px solid var(--border);border-radius:10px;background:var(--surface-2)}
 .m-head{background:var(--surface);font-weight:700}
-@media (max-width:1000px){
-  .m-row{grid-template-columns:1fr}
-}
+@media (max-width:1000px){ .m-row{grid-template-columns:1fr} }
 
-/* Agents */
 /* Agents – forbedret layout */
 .agents-grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));  /* større kort */
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:1rem;
   margin:.8rem 0;
 }
 @media (max-width:1000px){ .agents-grid{grid-template-columns:1fr} }
-
 .agent{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:14px;
   padding:1rem;
   box-shadow:var(--shadow);
-  min-height:132px;              /* mer “luft” */
+  min-height:132px;
 }
-
-.agent-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:.6rem;
-}
-.agent h4{
-  margin:0;
-  font-size:1.05rem;
-  letter-spacing:.2px;
-}
-
-.badge-mini{
-  font-size:.8rem;
-  border:1px solid var(--border);
-  border-radius:999px;
-  padding:.2rem .6rem;
-  background:var(--surface-2);
-  color:var(--muted);
-}
-
-.agent-metrics{
-  display:grid;
-  grid-template-columns:repeat(3, minmax(0,1fr)); /* Temp / Load / Power */
-  gap:.6rem;
-  align-items:end;
-}
+.agent-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.agent h4{margin:0;font-size:1.05rem;letter-spacing:.2px}
+.badge-mini{font-size:.8rem;border:1px solid var(--border);border-radius:999px;padding:.2rem .6rem;background:var(--surface-2);color:var(--muted)}
+.agent-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;align-items:end}
 @media (max-width:700px){ .agent-metrics{grid-template-columns:1fr 1fr} }
-
-.metric{
-  background:var(--surface-2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:.55rem .7rem;
-}
-.metric .label{
-  font-size:.85rem;
-  color:var(--muted);
-  margin-bottom:.15rem;
-}
-.metric .value{
-  font-weight:800;
-  font-size:1.15rem;
-  line-height:1.1;
-}
-
-.stat.ok{color:var(--accent)}
-.stat.hot{color:#d94c4c}
-.stat.cold{color:#2563eb}
-
-.agent-neighbors{
-  margin-top:.6rem;
-  color:var(--muted);
-  font-size:.9rem;
-  border-top:1px dashed var(--border);
-  padding-top:.5rem;
-}
+.metric{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.55rem .7rem}
+.metric .label{font-size:.85rem;color:var(--muted);margin-bottom:.15rem}
+.metric .value{font-weight:800;font-size:1.15rem;line-height:1.1}
+.stat.ok{color:var(--accent)} .stat.hot{color:#d94c4c} .stat.cold{color:#2563eb}
+.agent-neighbors{margin-top:.6rem;color:var(--muted);font-size:.9rem;border-top:1px dashed var(--border);padding-top:.5rem}
 
 /* Timeline */
 .timeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.6rem}
@@ -211,6 +159,14 @@ ul{padding-left:1.2rem}
 .t-item{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.8rem}
 .t-item h3{margin:.2rem 0 .4rem 0}
 .t-out{font-size:.9rem;color:var(--muted)}
+
+/* UML / Media */
+.media{display:flex;flex-direction:column;gap:.5rem}
+.img-link{display:block}
+.media img{
+  width:100%;height:auto;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);
+}
 
 /* Footer & Print */
 .site-footer{border-top:1px solid var(--border);background:var(--surface)}
@@ -229,40 +185,30 @@ ul{padding-left:1.2rem}
   display:flex; gap:1rem; align-items:center; z-index:2;
   font-size:.9rem; color:var(--muted);
 }
-.legend .key{
-  display:inline-block; width:14px; height:6px; border-radius:4px; margin-right:.35rem;
-}
+.legend .key{display:inline-block; width:14px; height:6px; border-radius:4px; margin-right:.35rem}
 .legend .key.power{ background:#86a9ff; }
 .legend .key.cooling{ background:#58f0b1; }
 .legend .key.edge{ background:#c3b4ff; }
 
-/* Egen farge for lag */
+/* Lagfarger & animasjon */
 .wire.power{ stroke:#86a9ff; }
 .wire.cooling{ stroke:#58f0b1; }
 .layer{ opacity:1; transition:opacity .2s ease }
 .layer.hidden{ opacity:.15 }
+.wire-flow{ stroke-dasharray:10 10; animation:flow 2.4s linear infinite }
+@keyframes flow{ to{ stroke-dashoffset:-20 } }
 
-/* Flyt-animasjon */
-.wire-flow{
-  stroke-dasharray: 10 10;
-  animation: flow 2.4s linear infinite;
-}
-@keyframes flow{
-  to{ stroke-dashoffset:-20; }
-}
-
-/* Bedre node-interaksjon */
-.node:focus-within .box,
-.node:active .box{
-  outline:3px solid var(--focus);
-  outline-offset:3px;
-}
-.box{ transition: filter .15s ease, transform .15s ease }
+/* Node-interaksjon */
+.node:focus-within .box,.node:active .box{ outline:3px solid var(--focus); outline-offset:3px }
+.box{ transition:filter .15s ease, transform .15s ease }
 .node:hover .box{ filter:brightness(1.05); transform:translateY(-1px) }
 
-/* Tooltip mørk modus forbedret kontrast */
+/* Tooltip mørk-kontrast */
 :root[data-theme="dark"] .tooltip{
   background:#0f172a; color:#e6ecff; border-color:#334155;
   box-shadow:0 8px 28px rgba(0,0,0,.45);
 }
 
+/* Pulse ved AI-avvik */
+.layer.pulse{ animation:pulseLayer .8s ease }
+@keyframes pulseLayer{ 0%{filter:brightness(1.4)} 100%{filter:none} }
