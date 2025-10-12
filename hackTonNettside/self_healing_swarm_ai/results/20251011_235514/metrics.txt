@@ -1,0 +1,7 @@
+============================================================
+SIMULATION METRICS
+============================================================
+
+Final Average Temperature: 27.76°C
+Temperature Variance: 0.0297
+Total Energy Consumption: 702726.51 J

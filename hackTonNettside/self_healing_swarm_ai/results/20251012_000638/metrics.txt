@@ -1,0 +1,14 @@
+============================================================
+SIMULATION METRICS
+============================================================
+
+Configuration:
+  - Number of agents: 6
+  - Target temperature: 25.0°C
+  - Simulation steps: 200
+  - Fault injection step: 50
+  - Faulty agent: -1
+
+Final State:
+  - Average temperature: 27.76°C
+  - Temperature variance: 0.0297

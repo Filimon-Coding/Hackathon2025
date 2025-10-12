@@ -1,0 +1,64 @@
+
+def plot_network_topology(self, num_agents: int, neighbors: Dict[int, List[int]],
+                         agent_states: Optional[List[Dict]] = None) -> plt.Figure:
+    """
+    Visualize agent network topology.
+    
+    Args:
+        num_agents: Total number of agents
+        neighbors: Dict mapping agent ID to list of neighbor IDs
+        agent_states: Optional agent states for color coding
+        
+    Returns:
+        Matplotlib figure
+    """
+    import networkx as nx
+    
+    fig, ax = plt.subplots(figsize=(10, 10))
+    
+    # Create graph
+    G = nx.Graph()
+    G.add_nodes_from(range(num_agents))
+    
+    # Add edges
+    for agent_id, neighbor_list in neighbors.items():
+        for neighbor_id in neighbor_list:
+            G.add_edge(agent_id, neighbor_id)
+    
+    # Position nodes in a circle
+    pos = nx.circular_layout(G)
+    
+    # Color nodes based on state
+    if agent_states:
+        node_colors = []
+        for i in range(num_agents):
+            state = agent_states[i] if i < len(agent_states) else {}
+            if state.get('is_faulty', False):
+                node_colors.append('red')
+            elif not state.get('is_active', True):
+                node_colors.append('gray')
+            else:
+                node_colors.append('lightgreen')
+    else:
+        node_colors = ['lightblue'] * num_agents
+    
+    # Draw network
+    nx.draw_networkx_nodes(G, pos, node_color=node_colors, 
+                          node_size=800, alpha=0.9, ax=ax)
+    nx.draw_networkx_edges(G, pos, alpha=0.5, width=2, ax=ax)
+    nx.draw_networkx_labels(G, pos, font_size=12, font_weight='bold', ax=ax)
+    
+    ax.set_title('Agent Network Topology', fontsize=14, fontweight='bold')
+    ax.axis('off')
+    
+    # Add legend
+    from matplotlib.patches import Patch
+    legend_elements = [
+        Patch(facecolor='lightgreen', label='Healthy'),
+        Patch(facecolor='red', label='Faulty'),
+        Patch(facecolor='gray', label='Inactive'),
+        Patch(facecolor='lightblue', label='Uninitialized')
+    ]
+    ax.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(1.15, 1))
+    
+    return fig

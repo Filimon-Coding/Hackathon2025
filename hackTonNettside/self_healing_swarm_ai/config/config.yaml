@@ -1,0 +1,90 @@
+
+# Configuration file for self-healing swarm AI cooling system
+
+system:
+  num_agents: 6
+  target_temp: 25.0
+  ambient_temp: 30.0
+  initial_temp_range: [23.0, 27.0]
+  initial_fan_range: [0.3, 0.7]
+  simulation_steps: 120
+  time_step_duration: 1.0  # seconds
+
+simulation:
+  total_steps: 200
+  dt: 1.0
+  fault_injection_step: 50
+  random_seed: 42
+
+hyperparameters:
+  learning_rate: 0.1
+  communication_weight: 0.3
+  fault_threshold: 0.7
+  convergence_threshold: 0.5
+  max_fan_speed: 1.0
+  min_fan_speed: 0.0
+
+anomaly_detection:
+  method: "isolation_forest"  # or "ais"
+  contamination: 0.1
+  n_estimators: 100
+  max_samples: 256
+  detection_window: 10
+  fault_threshold: 0.7
+
+adaptive_control:
+  pid_kp: 0.5
+  pid_ki: 0.1
+  pid_kd: 0.05
+  adaptation_rate: 0.02
+  control_horizon: 5
+
+control:
+  kp: 0.3  # Proportional gain
+  ki: 0.05  # Integral gain
+  kd: 0.1  # Derivative gain
+  learning_rate: 0.1
+  max_fan_speed: 1.0
+  min_fan_speed: 0.0
+
+swarm_coordination:
+  topology_type: "ring"  # ring, mesh, star
+  consensus_iterations: 3
+  cooperation_radius: 2
+  load_balancing_weight: 0.4
+
+swarm:
+  communication_weight: 0.3
+  cooperation_strength: 0.15
+  topology: "ring"  # ring, mesh, star
+
+fault_injection:
+  enabled: true
+  fault_step: 50
+  fault_duration: 30
+  fault_severity: 0.3
+  fault_probability: 0.15
+
+agent:
+  temp_sensor_noise: 0.1
+  humidity_sensor_noise: 0.5
+  power_base: 100
+  power_per_fan: 400
+  power_per_load: 200
+
+healing:
+  self_heal_attempts: 3
+  heal_threshold: 1.0
+  recovery_time: 10
+
+logging:
+  level: "INFO"
+  log_dir: "data/logs"
+  save_interval: 10
+  metrics_file: "metrics.csv"
+
+visualization:
+  plot_interval: 10
+  save_plots: true
+  plot_format: "png"
+  dpi: 150

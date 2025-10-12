@@ -1,0 +1,32 @@
+============================================================
+SIMULATION METRICS
+============================================================
+
+Configuration:
+  - Number of agents: 6
+  - Target temperature: 25.0°C
+  - Simulation steps: 200
+  - Fault injection step: 50
+  - Faulty agent: 5
+
+Final State:
+  - Average temperature: 24.94°C
+  - Temperature variance: 4.0779
+  - Average fan speed: 0.61
+  - Total power consumption: 2674.54 W
+
+Temperature Statistics:
+  - Maximum temperature: 29.35°C
+  - Minimum temperature: 23.42°C
+  - Temperature range: 5.94°C
+  - Final average: 24.94°C
+
+Energy Consumption:
+  - Total energy: 518084.76 J
+  - Average power: 2590.42 W
+  - Peak power: 2674.54 W
+
+Fault Recovery:
+  - Avg temp before fault: 24.92°C
+  - Max temp during fault: 25.52°C
+  - Recovery time: 0 steps
