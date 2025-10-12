@@ -132,108 +132,136 @@
   </section>
 
   <!-- Interaktivt systemdiagram -->
-  <section id="diagram" class="container">
-    <div class="card">
-      <div class="row between center">
-        <h2>Systemdiagram (kraft + kjøl + edge)</h2>
+<section id="diagram" class="container">
+  <div class="card">
+    <div class="row between center">
+      <h2>Systemdiagram (kraft + kjøl + edge)</h2>
 
-        <div class="diagram-controls row center gap">
-          <label class="switch row center gap">
-            <input type="checkbox" id="toggle-power" checked />
-            <span>Power flow</span>
-          </label>
-          <label class="switch row center gap">
-            <input type="checkbox" id="toggle-cooling" checked />
-            <span>Cooling loop</span>
-          </label>
+      <div class="diagram-controls row center gap">
+        <label class="switch row center gap">
+          <input type="checkbox" id="toggle-power" checked />
+          <span>Power flow</span>
+        </label>
+        <label class="switch row center gap">
+          <input type="checkbox" id="toggle-cooling" checked />
+          <span>Cooling loop</span>
+        </label>
 
-          <div class="zoom row center gap">
-            <button class="btn sm ghost" id="zoom-in">+</button>
-            <button class="btn sm ghost" id="zoom-out">−</button>
-            <button class="btn sm ghost" id="zoom-reset">Reset</button>
-          </div>
-
-          <button class="btn ghost sm" id="toggle-tooltips">Tooltips</button>
-        </div>
-      </div>
-
-      <div class="diagram-wrap">
-        <!-- Legend -->
-        <div class="legend">
-          <div><span class="key power"></span> Power flow</div>
-          <div><span class="key cooling"></span> Cooling / Swarm messages</div>
-          <div><span class="key edge"></span> Edge control</div>
+        <div class="zoom row center gap">
+          <button class="btn sm ghost" id="zoom-in">+</button>
+          <button class="btn sm ghost" id="zoom-out">−</button>
+          <button class="btn sm ghost" id="zoom-reset">Reset</button>
         </div>
 
-        <!-- SVG -->
-        <svg viewBox="0 0 900 420" class="diagram" aria-label="Systemdiagram">
-          <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
-            </marker>
-          </defs>
-
-          <g id="viewport">
-            <!-- Noder -->
-            <g class="node" data-tip="Grid: Inngående AC fra nett. Måles og reguleres.">
-              <rect x="30" y="150" width="140" height="120" rx="14" class="box grid"/>
-              <text x="100" y="210" class="box-text">Grid</text>
-            </g>
-
-            <g class="node" data-tip="ATS: Automatisk transfer for redundans.">
-              <rect x="210" y="150" width="140" height="120" rx="14" class="box ats"/>
-              <text x="280" y="210" class="box-text">ATS</text>
-            </g>
-
-            <g class="node" data-tip="DC-bus nær rack reduserer konverteringstap.">
-              <rect x="390" y="90" width="140" height="120" rx="14" class="box dcbus"/>
-              <text x="460" y="150" class="box-text">DC-bus</text>
-            </g>
-
-            <g class="node" data-tip="Batteri: peak-shaving + UPS + frekvensstøtte.">
-              <rect x="390" y="250" width="140" height="120" rx="14" class="box battery"/>
-              <text x="460" y="310" class="box-text">Batteri</text>
-            </g>
-
-            <g class="node" data-tip="Sol: koordineres med AI for karbon-bevisst drift.">
-              <rect x="570" y="90" width="140" height="120" rx="14" class="box solar"/>
-              <text x="640" y="150" class="box-text">Sol</text>
-            </g>
-
-            <g class="node" data-tip="Edge-kontroller: sverm-koordinasjon, anomali, API.">
-              <rect x="570" y="250" width="140" height="120" rx="14" class="box edge"/>
-              <text x="640" y="310" class="box-text">Edge</text>
-            </g>
-
-            <g class="node" data-tip="Racks: Hver sone har en mikro-agent med lokal styring.">
-              <rect x="750" y="150" width="120" height="120" rx="14" class="box rack"/>
-              <text x="810" y="210" class="box-text">Racks</text>
-            </g>
-
-            <!-- Power (blå) -->
-            <g id="layer-power" class="layer visible">
-              <line x1="170" y1="210" x2="210" y2="210" class="wire power wire-flow" marker-end="url(#arrow)"/>
-              <path d="M350 210 L390 150" class="wire power wire-flow" marker-end="url(#arrow)"/>
-              <path d="M350 210 L390 310" class="wire power wire-flow" marker-end="url(#arrow)"/>
-              <line x1="530" y1="150" x2="570" y2="150" class="wire power wire-flow" marker-end="url(#arrow)"/>
-              <line x1="530" y1="310" x2="570" y2="310" class="wire power wire-flow" marker-end="url(#arrow)"/>
-              <line x1="710" y1="210" x2="750" y2="210" class="wire power wire-flow" marker-end="url(#arrow)"/>
-            </g>
-
-            <!-- Cooling / Swarm (grønn) -->
-            <g id="layer-cooling" class="layer visible">
-              <path d="M640 310 C690 320 740 260 810 210" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
-              <path d="M810 210 C730 160 690 140 640 150" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
-              <path d="M640 150 C560 140 520 180 460 150" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
-              <path d="M460 310 C520 330 560 320 640 310" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
-            </g>
-          </g>
-        </svg>
-
-        <div class="tooltip" id="svg-tip" role="status"></div>
+        <button class="btn ghost sm" id="toggle-tooltips">Tooltips</button>
       </div>
     </div>
-  </section>
+
+    <!-- Scenario toolbar -->
+    <div class="scenario row gap">
+      <span class="muted small">Scenario:</span>
+      <button class="btn sm ghost" data-scn="normal">Normal</button>
+      <button class="btn sm ghost" data-scn="solar">Solar peak</button>
+      <button class="btn sm ghost" data-scn="grid">Grid sag</button>
+      <button class="btn sm ghost" data-scn="ats">ATS failover</button>
+      <button class="btn sm ghost" data-scn="hotspot">Rack hotspot</button>
+
+      <div class="row gap live-badges">
+        <span class="chip">DC-bus: <b id="live-dc">0</b> kW</span>
+        <span class="chip">Batteri: <b id="live-batt">0</b> kW</span>
+        <span class="chip">Rack temp: <b id="live-rack">0</b> °C</span>
+      </div>
+    </div>
+
+    <div id="diag-alert" class="diag-alert" hidden></div>
+
+    <div class="diagram-wrap">
+      <div class="legend">
+        <div><span class="key power"></span> Power flow</div>
+        <div><span class="key cooling"></span> Cooling / Swarm messages</div>
+        <div><span class="key edge"></span> Edge control</div>
+      </div>
+
+      <svg viewBox="0 0 900 420" class="diagram" aria-label="Systemdiagram">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 Z" fill="currentColor"></path>
+          </marker>
+          <!-- lys skygge for hot path -->
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <g id="viewport">
+          <!-- Noder -->
+          <g class="node" data-tip="Grid: Inngående AC fra nett. Måles og reguleres.">
+            <rect x="30" y="150" width="140" height="120" rx="14" class="box grid"/>
+            <text x="100" y="210" class="box-text">Grid</text>
+          </g>
+
+          <g class="node" data-tip="ATS: Automatisk transfer for redundans.">
+            <rect x="210" y="150" width="140" height="120" rx="14" class="box ats"/>
+            <text x="280" y="210" class="box-text">ATS</text>
+          </g>
+
+          <g class="node" data-tip="DC-bus nær rack reduserer konverteringstap.">
+            <rect x="390" y="90" width="140" height="120" rx="14" class="box dcbus"/>
+            <text x="460" y="150" class="box-text">DC-bus</text>
+          </g>
+
+          <g class="node" data-tip="Batteri: peak-shaving + UPS + frekvensstøtte.">
+            <rect x="390" y="250" width="140" height="120" rx="14" class="box battery"/>
+            <text x="460" y="310" class="box-text">Batteri</text>
+          </g>
+
+          <g class="node" data-tip="Sol: koordineres med AI for karbon-bevisst drift.">
+            <rect x="570" y="90" width="140" height="120" rx="14" class="box solar"/>
+            <text x="640" y="150" class="box-text">Sol</text>
+          </g>
+
+          <g class="node" data-tip="Edge-kontroller: sverm-koordinasjon, anomali, API.">
+            <rect x="570" y="250" width="140" height="120" rx="14" class="box edge"/>
+            <text x="640" y="310" class="box-text">Edge</text>
+          </g>
+
+          <g class="node" data-tip="Racks: Hver sone har en mikro-agent med lokal styring.">
+            <rect x="750" y="150" width="120" height="120" rx="14" class="box rack"/>
+            <text x="810" y="210" class="box-text">Racks</text>
+          </g>
+
+          <!-- POWER-paths (navn brukes i JS) -->
+          <g id="layer-power" class="layer visible">
+            <line id="p-grid-ats"   x1="170" y1="210" x2="210" y2="210" class="wire power wire-flow" marker-end="url(#arrow)"/>
+            <path id="p-ats-dc"     d="M350 210 L390 150" class="wire power wire-flow" marker-end="url(#arrow)"/>
+            <path id="p-ats-batt"   d="M350 210 L390 310" class="wire power wire-flow" marker-end="url(#arrow)"/>
+            <line id="p-dc-solar"   x1="530" y1="150" x2="570" y2="150" class="wire power wire-flow" marker-end="url(#arrow)"/>
+            <line id="p-batt-edge"  x1="530" y1="310" x2="570" y2="310" class="wire power wire-flow" marker-end="url(#arrow)"/>
+            <line id="p-sol-rack"   x1="710" y1="210" x2="750" y2="210" class="wire power wire-flow" marker-end="url(#arrow)"/>
+          </g>
+
+          <!-- COOLING / Swarm messages -->
+          <g id="layer-cooling" class="layer visible">
+            <path id="c-edge-rack"  d="M640 310 C690 320 740 260 810 210" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
+            <path id="c-rack-edge"  d="M810 210 C730 160 690 140 640 150" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
+            <path id="c-edge-dc"    d="M640 150 C560 140 520 180 460 150" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
+            <path id="c-batt-edge"  d="M460 310 C520 330 560 320 640 310" class="wire cooling wire-flow" marker-end="url(#arrow)"/>
+          </g>
+        </g>
+      </svg>
+
+      <!-- partikkel-lag -->
+      <svg class="particles" viewBox="0 0 900 420" preserveAspectRatio="none"></svg>
+
+      <div class="tooltip" id="svg-tip" role="status"></div>
+    </div>
+  </div>
+</section>
+
 
   <!-- Dashboard m/Swarm agents -->
   <section id="dashboard" class="container">

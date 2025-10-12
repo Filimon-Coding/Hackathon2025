@@ -47,6 +47,31 @@ body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial,Helvetica,sans-serif;colo
 a{color:var(--primary);text-decoration:none}
 a:hover{opacity:.9}
 
+
+/* Scenario-toolbar, badges og alert */
+.scenario{margin:.6rem 0 .2rem 0; flex-wrap:wrap; align-items:center}
+.chip{background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:.25rem .55rem}
+.live-badges{margin-left:auto}
+.diag-alert{
+  margin:.4rem 0; padding:.5rem .7rem; border-radius:10px;
+  background:rgba(255, 80, 80, .12); border:1px solid #ff9b9b; color:#ffdede;
+}
+
+/* Partikkel-lag: eget overlay-svg */
+.diagram-wrap{position:relative}
+.diagram-wrap .particles{
+  position:absolute; inset:0; pointer-events:none;
+}
+
+/* Dynamisk tykkelse styres i JS, men glow hjelper visuelt */
+.wire.hot{ filter:url(#glow) brightness(1.2); }
+
+/* Små punktpartikler */
+.dot{ r:3.2; opacity:.9 }
+.dot.power{ fill:#86a9ff }
+.dot.cool{ fill:#58f0b1 }
+
+
 /* Header */
 .site-header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
 :root[data-theme="dark"] .site-header{background:linear-gradient(180deg,var(--surface),rgba(0,0,0,.35))}

@@ -41,6 +41,179 @@ const fmt=(n,d=1)=>Number(n).toFixed(d);
   const vp     = document.getElementById('viewport');
   const svg    = document.querySelector('.diagram-wrap svg');
 
+
+/* ====== Mini-simulator for diagrammet ====== */
+const flows = {
+  // nominelle kW for stier (oppdateres av scenarier)
+  power: {
+    'p-grid-ats':  600,  // grid -> ATS
+    'p-ats-dc':    480,  // ATS -> DC
+    'p-ats-batt':   40,  // ATS -> Batt (lading)
+    'p-dc-solar':   80,  // DC <-> Sol (her mot Sol for enkelhet)
+    'p-batt-edge':  60,  // Batt -> Edge
+    'p-sol-rack':  420,  // DC/Sol -> Rack
+  },
+  cooling: {
+    'c-edge-rack':  1.0, // relativt behov (0..3)
+    'c-rack-edge':  0.9,
+    'c-edge-dc':    0.6,
+    'c-batt-edge':  0.5,
+  },
+  rackTemp: 26.0
+};
+
+// oppdater live-badger
+function updateLiveBadges(){
+  $('#live-dc').textContent   = fmt(flows.power['p-ats-dc'] + flows.power['p-dc-solar'],0);
+  $('#live-batt').textContent = fmt(flows.power['p-ats-batt'] - flows.power['p-batt-edge'],0);
+  $('#live-rack').textContent = fmt(flows.rackTemp,1);
+}
+
+// sett stroke-width etter kW (enkelt skjema)
+function applyPowerThickness(){
+  Object.entries(flows.power).forEach(([id,kw])=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    const w = 1.5 + Math.min(kw,900)/180;  // 1.5..6.5
+    el.setAttribute('stroke-width', w.toFixed(2));
+    if(kw > 500) el.classList.add('hot'); else el.classList.remove('hot');
+  });
+}
+function applyCoolingThickness(){
+  Object.entries(flows.cooling).forEach(([id,val])=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    const w = 2 + val*2.6; // 2.. ~8
+    el.setAttribute('stroke-width', w.toFixed(2));
+  });
+}
+
+// partikkel-animasjon på paths (kjører på .particles svg)
+const particlesSvg = document.querySelector('.diagram-wrap .particles');
+const particleDefs = [];
+function addParticlesForPath(pathId, kind, density=1){
+  const path = document.getElementById(pathId);
+  if(!path) return;
+  const len = path.getTotalLength();
+  const count = Math.max(2, Math.round(len/160 * density));
+  const arr = [];
+  for(let i=0;i<count;i++){
+    const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('class', `dot ${kind}`);
+    particlesSvg.appendChild(dot);
+    arr.push({el:dot, path, len, t:Math.random()*len});
+  }
+  particleDefs.push({kind, pathId, arr});
+}
+function buildParticles(){
+  particlesSvg.innerHTML='';
+  particleDefs.length=0;
+  // power
+  Object.keys(flows.power).forEach(id=> addParticlesForPath(id,'power',1));
+  // cooling
+  Object.keys(flows.cooling).forEach(id=> addParticlesForPath(id,'cool',1.3));
+}
+buildParticles();
+
+// animér partikler med hastighet basert på flow
+let lastTs=0;
+function animateParticles(ts=0){
+  const dt = (ts-lastTs)/1000 || 0.016;
+  lastTs = ts;
+  particleDefs.forEach(def=>{
+    def.arr.forEach(p=>{
+      // velg fart
+      let v = 35; // px/s base
+      if(def.kind==='power'){ v += (flows.power[p.path.id]||0)/2; } // mer kW => raskere
+      else { v += (flows.cooling[p.path.id]||0)*120; }            // mer behov => raskere
+      p.t = (p.t + v*dt) % p.len;
+      const pt = p.path.getPointAtLength(p.t);
+      p.el.setAttribute('cx', pt.x);
+      p.el.setAttribute('cy', pt.y);
+    });
+  });
+  requestAnimationFrame(animateParticles);
+}
+requestAnimationFrame(animateParticles);
+
+// Scenarier
+const alertBox = $('#diag-alert');
+function setAlert(msg){ if(!msg){alertBox.hidden=true; alertBox.textContent='';} else {alertBox.hidden=false; alertBox.textContent=msg;} }
+
+function scenarioNormal(){
+  setAlert('');
+  Object.assign(flows.power, {
+    'p-grid-ats':600,'p-ats-dc':480,'p-ats-batt':40,'p-dc-solar':80,'p-batt-edge':60,'p-sol-rack':420
+  });
+  Object.assign(flows.cooling, { 'c-edge-rack':1.0,'c-rack-edge':0.9,'c-edge-dc':0.6,'c-batt-edge':0.5 });
+  flows.rackTemp = 26.0;
+}
+function scenarioSolar(){
+  setAlert('Solar peak: sol bidrar mer – grid last ned, racks forsynes grønnere.');
+  flows.power['p-dc-solar'] = 180;
+  flows.power['p-grid-ats'] = 420;
+  flows.power['p-ats-dc']   = 380;
+  flows.power['p-sol-rack'] = 520;
+  flows.power['p-ats-batt'] = 60; // lader litt ekstra
+  Object.assign(flows.cooling, {'c-edge-rack':1.1,'c-rack-edge':1.0});
+  flows.rackTemp = 25.5;
+}
+function scenarioGrid(){
+  setAlert('Grid sag: redusert nettkapasitet – batteri dekker mellomlegget.');
+  flows.power['p-grid-ats'] = 280;
+  flows.power['p-ats-dc']   = 240;
+  flows.power['p-batt-edge']= 180;   // batteri ut
+  flows.power['p-ats-batt'] = 0;     // slutter å lade
+  flows.power['p-sol-rack'] = 380;
+  Object.assign(flows.cooling, {'c-edge-rack':1.2,'c-rack-edge':1.0});
+  flows.rackTemp = 26.7;
+}
+function scenarioATS(){
+  setAlert('ATS failover: Grid→ATS av, last rutes via Batteri/Edge til DC/Racks.');
+  flows.power['p-grid-ats'] = 0;
+  flows.power['p-ats-dc']   = 0;
+  flows.power['p-ats-batt'] = 0;
+  flows.power['p-batt-edge']= 320;
+  flows.power['p-sol-rack'] = 360;
+  flows.power['p-dc-solar'] = 120;
+  Object.assign(flows.cooling, {'c-edge-rack':1.3,'c-rack-edge':1.1,'c-batt-edge':0.9});
+  flows.rackTemp = 27.2;
+}
+function scenarioHotspot(){
+  setAlert('Rack hotspot: Swarm øker kjøletrykk og balanserer varme.');
+  flows.power['p-sol-rack'] = 560;
+  flows.cooling['c-edge-rack'] = 2.3;
+  flows.cooling['c-rack-edge'] = 2.0;
+  flows.cooling['c-edge-dc']   = 1.2;
+  flows.rackTemp = 31.5;
+}
+
+// knapper
+$$('[data-scn]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const scn = btn.getAttribute('data-scn');
+    ({normal:scenarioNormal, solar:scenarioSolar, grid:scenarioGrid, ats:scenarioATS, hotspot:scenarioHotspot})[scn]();
+    applyPowerThickness(); applyCoolingThickness(); updateLiveBadges();
+  });
+});
+// init
+scenarioNormal(); applyPowerThickness(); applyCoolingThickness(); updateLiveBadges();
+
+// oppdatér jevnlig for “puls”
+setInterval(()=>{
+  // små variasjoner for mer liv
+  Object.keys(flows.power).forEach(k=>{
+    flows.power[k] = Math.max(0, flows.power[k] + rnd(-6,6));
+  });
+  Object.keys(flows.cooling).forEach(k=>{
+    flows.cooling[k] = Math.max(0, flows.cooling[k] + rnd(-0.05,0.05));
+  });
+  // temperatur driver litt mot 26…
+  flows.rackTemp += (26 - flows.rackTemp)*0.02 + rnd(-0.05,0.05);
+  applyPowerThickness(); applyCoolingThickness(); updateLiveBadges();
+}, 800);
+
+
   // Toggle lag
   const chkP = document.getElementById('toggle-power');
   const chkC = document.getElementById('toggle-cooling');

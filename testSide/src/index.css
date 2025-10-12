@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 20% 8%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 18% 12%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 18% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 195 100% 50%;
+    --primary-foreground: 220 20% 8%;
+
+    --secondary: 280 60% 55%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 15% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 170 80% 45%;
+    --accent-foreground: 220 20% 8%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
+    --ring: 195 100% 50%;
+
+    --radius: 0.75rem;
+    
+    /* Simulation Colors */
+    --cooling: 195 100% 50%;
+    --optimal: 142 76% 45%;
+    --heating: 28 100% 60%;
+    --fault: 0 84% 60%;
+    --warning: 36 100% 50%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(195 100% 50%), hsl(280 60% 55%));
+    --gradient-cooling: linear-gradient(135deg, hsl(195 100% 50%), hsl(220 80% 55%));
+    --gradient-optimal: linear-gradient(135deg, hsl(142 76% 45%), hsl(170 80% 45%));
+    
+    /* Glows */
+    --glow-cooling: 0 0 20px hsl(195 100% 50% / 0.5);
+    --glow-optimal: 0 0 20px hsl(142 76% 45% / 0.5);
+    --glow-fault: 0 0 20px hsl(0 84% 60% / 0.5);
+    
+    /* Animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Same as light for this app - always dark theme */
+  }
+}
+
+@layer utilities {
+  .glow-cooling {
+    box-shadow: var(--glow-cooling);
+  }
+  
+  .glow-optimal {
+    box-shadow: var(--glow-optimal);
+  }
+  
+  .glow-fault {
+    box-shadow: var(--glow-fault);
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-spin-slow {
+    animation: spin 4s linear infinite;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
