@@ -1,12 +1,11 @@
-# Hackathon2025
-# 🌡️ Self-Healing Swarm AI Cooling System – Web Simulation
+#  Self-Healing Swarm AI Cooling System – Web Simulation
 
 Dette prosjektet er en **interaktiv nettside** som simulerer et selvhelbredende AI-basert kjølesystem for datasentre.  
 Nettsiden viser hvordan flere smarte agenter samarbeider for å stabilisere temperaturen når en feil oppstår.
 
 ---
 
-## 🚀 Funksjoner
+##  Funksjoner
 
 - Dynamisk **simulering** av AI-agenter som reagerer på varme og feil  
 - **Start**- og **Reset**-knapper for å kontrollere simuleringen  
@@ -16,7 +15,7 @@ Nettsiden viser hvordan flere smarte agenter samarbeider for å stabilisere temp
 
 ---
 
-## 🧩 Teknologistack
+##  Teknologistack
 
 | Teknologi | Bruksområde |
 |------------|-------------|
@@ -29,7 +28,7 @@ Nettsiden viser hvordan flere smarte agenter samarbeider for å stabilisere temp
 
 ---
 
-## 📁 Prosjektstruktur
+##  Prosjektstruktur
 
 ```
 src/
@@ -44,20 +43,20 @@ src/
 
 ---
 
-## ⚙️ Installasjon og kjøring lokalt
+##  Installasjon og kjøring lokalt
 
-### 1️⃣ Klon repoet
+###  Klon repoet
 ```bash
 git clone <repo-url>
 cd dual-play-sim
 ```
 
-### 2️⃣ Installer avhengigheter
+###  Installer avhengigheter
 ```bash
 npm install
 ```
 
-### 3️⃣ Start utviklingsserver
+###  Start utviklingsserver
 ```bash
 npm run dev
 ```
@@ -69,7 +68,7 @@ http://localhost:5173
 
 ---
 
-## 🧠 Hvordan det fungerer
+## Hvordan det fungerer
 
 Når du trykker **Start**, aktiveres en simulert sverm av AI-agenter.  
 De oppdager endringer i varme, samarbeider om kjøling og balanserer temperaturen i sanntid.  
@@ -85,7 +84,7 @@ De oppdager endringer i varme, samarbeider om kjøling og balanserer temperature
 
 ---
 
-## 📦 Bygg for produksjon
+##  Bygg for produksjon
 ```bash
 npm run build
 ```
@@ -93,13 +92,10 @@ Ferdige filer legges i mappen `/dist` og kan distribueres hvor som helst.
 
 ---
 
-## 🧑‍💻 Bidragsytere
-- Filimon Nuguse Kaleab – Systemutvikler / Frontend
-- (legg til flere navn her ved behov)
 
 ---
 
-## 🪄 Lisens
+##  Lisens
 Dette prosjektet er utviklet for hackathon-bruk og er åpent for videreutvikling.  
 Fri bruk for læring, demonstrasjon og forskning.
 
