@@ -3,6 +3,9 @@
 Dette prosjektet er en **interaktiv nettside** som simulerer et selvhelbredende AI-basert kjølesystem for datasentre.  
 Nettsiden viser hvordan flere smarte agenter samarbeider for å stabilisere temperaturen når en feil oppstår.
 
+
+![alt text](image.png)
+
 ---
 
 ##  Funksjoner
