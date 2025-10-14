@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+    <html lang="no" data-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartGrid Edge – Hackathon Prototype</title>
+  <meta name="description" content="Prototype: effektiv, robust og skalerbar strømfordeling med overvåkning, AI og fornybar integrasjon." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container row between center">
+      <div class="brand">
+        <span class="logo">⚡</span>
+        <span class="brand-text">SmartGrid Edge</span>
+      </div>
+      <nav class="nav">
+        <a href="#problem">Problem</a>
+        <a href="#solution">Løsning</a>
+        <a href="#diagram">Diagram</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#optimizer">Simulator</a>
+        <a href="#summary">One-pager</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero container">
+    <div class="hero-content">
+      <h1>Effektiv, robust og grønn strømfordeling – <span class="accent">klar for skalering</span></h1>
+      <p>
+        Prototype som adresserer <strong>effektivitet</strong>, <strong>pålitelighet</strong>, <strong>overvåkning/automatisering</strong>,
+        <strong>fornybar</strong> integrasjon og <strong>skalerbarhet</strong>
+      </p>
+      <div class="hero-cta row">
+        <a class="btn primary" href="#dashboard">Se live-dashboard</a>
+        <a class="btn ghost" href="#summary">Skriv ut one-pager</a>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <div class="badge">
+        <span>Hackathon</span>
+        <small>Day 1 demo</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem" class="container grid two">
+    <div class="card">
+      <h2>Problem</h2>
+      <ul class="check">
+        <li>Tap i distribusjon fra nett → rack</li>
+        <li>Kontinuerlig drift under feil/vedlikehold/spikes</li>
+        <li>Mangel på innsikt og automatisering</li>
+        <li>Integrasjon av fornybar + lagring uten ustabilitet</li>
+        <li>Behov for skalerbar arkitektur for vekst</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Mål</h2>
+      <ul class="target">
+        <li>Redusere tap (kWh) og PUE</li>
+        <li>Feiltoleranse og rask isolasjon</li>
+        <li>Sanntidsovervåkning + hendelsesstyrt automasjon</li>
+        <li>Optimere miks av grid/sol/batteri</li>
+        <li>Modulær design for 130–800 kW/rack-miljø</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="solution" class="container">
+    <div class="card">
+      <h2>Løsningsskisse</h2>
+      <p>
+        <strong>Edge-styring</strong> med smarte brytere, sensorer og AI-logikk. <strong>Ring-topologi</strong> for redundans.
+        <strong>DC-bus</strong> nær rackene for lavere tap. <strong>Batteri</strong> for peak-shaving og UPS.
+        <strong>Fornybar</strong> integrasjon via hybrid kontroller. <strong>API</strong> for skalerbarhet.
+      </p>
+      <div class="pill-row">
+        <span class="pill">AI Feildeteksjon</span>
+        <span class="pill">Peak Shaving</span>
+        <span class="pill">Auto-isolasjonsplan</span>
+        <span class="pill">Fornybar miks</span>
+        <span class="pill">Observability</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="diagram" class="container">
+    <div class="card">
+      <div class="row between center">
+        <h2>Visuell arkitektur</h2>
+        <button class="btn ghost sm" id="toggle-tooltips">Toggle tooltips</button>
+      </div>
+
+      <!-- Enkel, responsiv SVG med tooltips -->
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 900 420" class="diagram" aria-label="Systemdiagram">
+          <!-- Grid -->
+          <g class="node" data-tip="Grid: Inngående AC fra nett. Måles og reguleres.">
+            <rect x="30" y="150" width="140" height="120" rx="14" class="box grid"/>
+            <text x="100" y="210" class="box-text">Grid</text>
+          </g>
+
+          <!-- ATS -->
+          <g class="node" data-tip="ATS: Automatisk transfer switch for redundans.">
+            <rect x="210" y="150" width="140" height="120" rx="14" class="box ats"/>
+            <text x="280" y="210" class="box-text">ATS</text>
+          </g>
+
+          <!-- Inverter/DC bus -->
+          <g class="node" data-tip="DC-bus: Reduserer konverteringstap nær rack.">
+            <rect x="390" y="90" width="140" height="120" rx="14" class="box dcbus"/>
+            <text x="460" y="150" class="box-text">DC-bus</text>
+          </g>
+
+          <!-- Battery -->
+          <g class="node" data-tip="Batteri: Peak-shaving, UPS, frekvensstøtte.">
+            <rect x="390" y="250" width="140" height="120" rx="14" class="box battery"/>
+            <text x="460" y="310" class="box-text">Batteri</text>
+          </g>
+
+          <!-- Solar -->
+          <g class="node" data-tip="Sol: Integrert via hybrid inverter.">
+            <rect x="570" y="90" width="140" height="120" rx="14" class="box solar"/>
+            <text x="640" y="150" class="box-text">Sol</text>
+          </g>
+
+          <!-- Edge Controller -->
+          <g class="node" data-tip="Edge-kontroller: AI, automasjon, API.">
+            <rect x="570" y="250" width="140" height="120" rx="14" class="box edge"/>
+            <text x="640" y="310" class="box-text">Edge</text>
+          </g>
+
+          <!-- Racks -->
+          <g class="node" data-tip="Rack: Høy tetthet (130–800 kW/rack). Overvåkning pr. feed.">
+            <rect x="750" y="150" width="120" height="120" rx="14" class="box rack"/>
+            <text x="810" y="210" class="box-text">Racks</text>
+          </g>
+
+          <!-- Lines -->
+          <line x1="170" y1="210" x2="210" y2="210" class="wire"/>
+          <line x1="350" y1="210" x2="390" y2="150" class="wire"/>
+          <line x1="350" y1="210" x2="390" y2="310" class="wire"/>
+          <line x1="530" y1="150" x2="570" y2="150" class="wire"/>
+          <line x1="530" y1="310" x2="570" y2="310" class="wire"/>
+          <line x1="710" y1="210" x2="750" y2="210" class="wire"/>
+        </svg>
+        <div class="tooltip" id="svg-tip" role="status"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dashboard" class="container">
+    <div class="card">
+      <div class="row between center">
+        <h2>Live-dashboard</h2>
+        <div class="row gap">
+          <button class="btn sm" id="btn-start">Start</button>
+          <button class="btn sm ghost" id="btn-stop">Stopp</button>
+          <button class="btn sm ghost" id="btn-reset">Nullstill</button>
+        </div>
+      </div>
+
+      <div class="grid four kpis" id="kpi-cards">
+        <!-- KPIs fylles av JS -->
+      </div>
+
+      <div class="grid two">
+        <div class="card sub">
+          <h3>AI feildeteksjon</h3>
+          <p>Oppdager anomalier i strøm/temperatur og foreslår tiltak.</p>
+          <div class="row gap">
+            <button class="btn sm" id="btn-run-ai">Kjør deteksjon</button>
+            <label class="switch">
+              <input type="checkbox" id="chk-auto-ai" />
+              <span>Auto hver 10s</span>
+            </label>
+          </div>
+          <ul id="ai-findings" class="findings"></ul>
+        </div>
+
+        <div class="card sub">
+          <h3>Hendelser</h3>
+          <ul id="event-log" class="events"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="optimizer" class="container">
+    <div class="card">
+      <h2>Simulator: miks &amp; kapasitetsvalg</h2>
+      <div class="grid two">
+        <div>
+          <label class="slider">
+            <span>Fornybar andel (%)</span>
+            <input type="range" id="inp-renew" min="0" max="100" value="35" />
+            <output id="out-renew">35%</output>
+          </label>
+          <label class="slider">
+            <span>Batterikapasitet (MWh)</span>
+            <input type="range" id="inp-batt" min="0" max="20" value="5" />
+            <output id="out-batt">5.0</output>
+          </label>
+          <label class="slider">
+            <span>Årlig lastvekst (%)</span>
+            <input type="range" id="inp-growth" min="0" max="40" value="12" />
+            <output id="out-growth">12%</output>
+          </label>
+          <button class="btn" id="btn-optimize">Beregn KPI</button>
+        </div>
+        <div>
+          <div class="kpi-grid">
+            <div class="kpi">
+              <div class="kpi-label">Estimert tap</div>
+              <div class="kpi-value" id="kpi-loss">–</div>
+              <div class="kpi-desc">kWh / år</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">Uptime (sim.)</div>
+              <div class="kpi-value" id="kpi-uptime">–</div>
+              <div class="kpi-desc">%</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">CO₂-reduksjon</div>
+              <div class="kpi-value" id="kpi-co2">–</div>
+              <div class="kpi-desc">tonn / år</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">PUE (proxy)</div>
+              <div class="kpi-value" id="kpi-pue">–</div>
+              <div class="kpi-desc">lavere er bedre</div>
+            </div>
+          </div>
+          <p class="small muted">*Enkle heuristikker for demo – fint til pitch, ikke produksjonsberegninger.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="summary" class="container print-card">
+    <div class="card">
+      <h2>One-pager: sammendrag</h2>
+      <div class="grid two">
+        <div>
+          <h3>Problem</h3>
+          <ul>
+            <li>Tap, avbrudd, manglende innsikt, lite fornybar</li>
+          </ul>
+          <h3>Løsning</h3>
+          <ul>
+            <li>Edge-styring, ring-topologi, DC-bus, batteri</li>
+            <li>AI-deteksjon, auto-isolasjonsplan, API</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Fordeler</h3>
+          <ul>
+            <li>Lavere tap og kost</li>
+            <li>Høyere oppetid</li>
+            <li>Grønnere miks</li>
+            <li>Klar for skalering</li>
+          </ul>
+          <h3>Neste steg</h3>
+          <ul>
+            <li>PoC i lab + datasett</li>
+            <li>Integrasjon mot BMS/SCADA</li>
+            <li>Pilot i én sone</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" onclick="window.print()">Skriv ut / lagre PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container row between center">
+      <span>© 2025 SmartGrid Edge</span>
+      <span class="muted small">Demo for hackathon – statiske heuristikker + simulerte data</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
