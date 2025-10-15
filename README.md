@@ -56,7 +56,7 @@ src/
 ###  Klon repoet
 ```bash
 git clone <repo-url>
-cd dual-play-sim
+cd hackTonNettside$ npm run dev
 ```
 
 ###  Installer avhengigheter
